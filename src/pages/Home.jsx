@@ -1,14 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Container } from "../components";
-import { movies } from "../utils/mock";
-import { useNavigate } from "react-router-dom";
+import api from "../config/api";
 export default function Home() {
-  const navigate = useNavigate();
+  const [cat, setCat] = useState();
+
+  const [persons, setPersons] = useState([]);
+
+  useEffect(() => {
+    fetch("https://cataas.com/cat")
+      .then((response) => {
+        return response.blob();
+      })
+      .then((myBlob) => {
+        var objectURL = URL.createObjectURL(myBlob);
+        setCat(objectURL);
+      })
+      .catch((err) => console.log(err));
+
+    api
+      .get()
+      .then((response) => {
+        setPersons(response.data.results);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Container>
-      <h1>MEUS FILMES FAVORITOS</h1>
-      <h4>De todos os tempos</h4>
+      <h1>CONSUMINDO API's</h1>
+
+      <img src={cat} alt="cat" />
 
       <div
         style={{
@@ -18,12 +39,11 @@ export default function Home() {
           justifyContent: "space-around",
         }}
       >
-        {movies.map((movie) => (
+        {persons.map((person) => (
           <Card
-            title={movie.name}
-            subtitle={movie.year}
-            image={movie.image}
-            onClick={() => navigate("/about", { state: movie })}
+            title={person.name}
+            subtitle={person.species}
+            image={person.image}
           />
         ))}
       </div>

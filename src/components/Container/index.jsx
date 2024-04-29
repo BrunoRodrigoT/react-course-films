@@ -7,7 +7,6 @@ export default function Container({ children, styles }) {
         display: "flex",
         justifyContent: "center",
         backgroundColor: "#020617",
-        height: "100vh",
         margin: "auto",
       }}
     >
